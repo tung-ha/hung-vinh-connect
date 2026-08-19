@@ -19,6 +19,7 @@ export function Hero() {
   }, []);
 
   const active = featured[index];
+  if (!active) return null;
 
   return (
     <section className="relative overflow-hidden">
