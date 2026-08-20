@@ -27,8 +27,10 @@ export function ProductCatalog({ initialCategory }: { initialCategory?: string |
         (!q ||
           p.name.toLowerCase().includes(q) ||
           p.nameVi.toLowerCase().includes(q) ||
+          p.brand.toLowerCase().includes(q) ||
           p.sku.toLowerCase().includes(q)),
     );
+
   }, [query, cat]);
 
   return (
