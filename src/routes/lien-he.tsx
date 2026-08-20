@@ -8,9 +8,9 @@ const description =
   "Gửi yêu cầu báo giá sỉ tới Hung & Vinh Asian Food, kho Wingfield SA. Điện thoại 0450 564 544, giao hàng nhanh 24-48h khu vực Adelaide.";
 
 export const Route = createFileRoute("/lien-he")({
-  validateSearch: (s: Record<string, unknown>) => ({
-    item: typeof s.item === "string" ? s.item : undefined,
-  }),
+  validateSearch: (s: Record<string, unknown>): { item?: string } =>
+    typeof s["item"] === "string" ? { item: s["item"] } : {},
+
   head: () => ({
     meta: [
       { title },

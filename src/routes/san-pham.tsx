@@ -8,9 +8,9 @@ const description =
   "Danh mục sỉ thực phẩm Việt & Đông Nam Á: gạo ST25, nước mắm, cốt gia vị, đồ uống, hàng đông lạnh và đồ khô. Tìm theo tên hoặc mã SKU.";
 
 export const Route = createFileRoute("/san-pham")({
-  validateSearch: (s: Record<string, unknown>) => ({
-    cat: typeof s.cat === "string" ? s.cat : undefined,
-  }),
+  validateSearch: (s: Record<string, unknown>): { cat?: string } =>
+    typeof s["cat"] === "string" ? { cat: s["cat"] } : {},
+
   head: () => ({
     meta: [
       { title },
