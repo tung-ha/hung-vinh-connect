@@ -13,7 +13,7 @@ import { categories, products, type Product } from "@/data/products";
 import { useI18n } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
-export function ProductCatalog({ initialCategory }: { initialCategory?: string }) {
+export function ProductCatalog({ initialCategory }: { initialCategory?: string | undefined }) {
   const { t, locale } = useI18n();
   const [query, setQuery] = useState("");
   const [cat, setCat] = useState<string>(initialCategory ?? "all");

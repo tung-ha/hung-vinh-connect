@@ -5,7 +5,7 @@ import { company } from "@/data/company";
 import { categories } from "@/data/products";
 import { useI18n } from "@/lib/i18n";
 
-export function RfqForm({ prefillItem }: { prefillItem?: string }) {
+export function RfqForm({ prefillItem }: { prefillItem?: string | undefined }) {
   const { t } = useI18n();
   const [sent, setSent] = useState(false);
   const [interests, setInterests] = useState<string[]>([]);
