@@ -16,13 +16,14 @@ type I18nValue = {
 };
 
 const I18nContext = createContext<I18nValue>({
-  locale: "en",
+  locale: "vi",
   setLocale: () => {},
-  t: (en) => en,
+  t: (_en, vi) => vi,
 });
 
 export function I18nProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>("en");
+  // Vietnamese is the default language on first load.
+  const [locale, setLocaleState] = useState<Locale>("vi");
 
   useEffect(() => {
     const stored = window.localStorage.getItem("hv-locale");

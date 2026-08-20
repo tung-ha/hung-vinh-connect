@@ -1,6 +1,11 @@
 import { useI18n } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
+const options = [
+  { id: "vi", label: "🇻🇳 Tiếng Việt", short: "🇻🇳 VI" },
+  { id: "en", label: "🇬🇧 English", short: "🇬🇧 EN" },
+] as const;
+
 export function LanguageSwitcher({ className }: { className?: string }) {
   const { locale, setLocale } = useI18n();
 
@@ -11,22 +16,23 @@ export function LanguageSwitcher({ className }: { className?: string }) {
         className,
       )}
       role="group"
-      aria-label="Language"
+      aria-label="Language / Ngôn ngữ"
     >
-      {(["en", "vi"] as const).map((l) => (
+      {options.map((o) => (
         <button
-          key={l}
+          key={o.id}
           type="button"
-          onClick={() => setLocale(l)}
-          aria-pressed={locale === l}
+          onClick={() => setLocale(o.id)}
+          aria-pressed={locale === o.id}
+          title={o.label}
           className={cn(
             "rounded-full px-3 py-1 transition-colors",
-            locale === l
+            locale === o.id
               ? "bg-primary text-primary-foreground"
               : "text-muted-foreground hover:text-foreground",
           )}
         >
-          {l.toUpperCase()}
+          {o.short}
         </button>
       ))}
     </div>
