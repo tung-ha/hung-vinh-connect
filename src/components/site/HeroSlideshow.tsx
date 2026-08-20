@@ -53,7 +53,7 @@ export function HeroSlideshow() {
         ))}
       </div>
       <div
-        className="absolute inset-0 -z-10 bg-[linear-gradient(to_right,rgba(0,0,0,0.78),rgba(0,0,0,0.55))]"
+        className="absolute inset-0 -z-10 bg-[linear-gradient(to_right,rgba(0,0,0,0.5),rgba(0,0,0,0.28)_55%,rgba(0,0,0,0.18))]"
         aria-hidden
       />
 
