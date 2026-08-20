@@ -10,33 +10,63 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ProductsRouteImport } from './routes/products'
+import { Route as St25RouteImport } from './routes/st25'
+import { Route as WholesaleRouteImport } from './routes/wholesale'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProductsRoute = ProductsRouteImport.update({
+  id: '/products',
+  path: '/products',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const St25Route = St25RouteImport.update({
+  id: '/st25',
+  path: '/st25',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WholesaleRoute = WholesaleRouteImport.update({
+  id: '/wholesale',
+  path: '/wholesale',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/products': typeof ProductsRoute
+  '/st25': typeof St25Route
+  '/wholesale': typeof WholesaleRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/products': typeof ProductsRoute
+  '/st25': typeof St25Route
+  '/wholesale': typeof WholesaleRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/products': typeof ProductsRoute
+  '/st25': typeof St25Route
+  '/wholesale': typeof WholesaleRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/products' | '/st25' | '/wholesale'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/products' | '/st25' | '/wholesale'
+  id: '__root__' | '/' | '/products' | '/st25' | '/wholesale'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ProductsRoute: typeof ProductsRoute
+  St25Route: typeof St25Route
+  WholesaleRoute: typeof WholesaleRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +78,35 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/products': {
+      id: '/products'
+      path: '/products'
+      fullPath: '/products'
+      preLoaderRoute: typeof ProductsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/st25': {
+      id: '/st25'
+      path: '/st25'
+      fullPath: '/st25'
+      preLoaderRoute: typeof St25RouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/wholesale': {
+      id: '/wholesale'
+      path: '/wholesale'
+      fullPath: '/wholesale'
+      preLoaderRoute: typeof WholesaleRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ProductsRoute: ProductsRoute,
+  St25Route: St25Route,
+  WholesaleRoute: WholesaleRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
