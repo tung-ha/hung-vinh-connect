@@ -160,24 +160,30 @@ export function ProductCatalog({ initialCategory }: { initialCategory?: string |
                   {locale === "vi" ? selected.nameVi : selected.name}
                 </DialogTitle>
                 <DialogDescription>
-                  {selected.sku} · {selected.origin}
+                  {selected.brand} · {selected.sku} · {selected.origin}
                 </DialogDescription>
               </DialogHeader>
+              <img
+                src={selected.image}
+                alt={`${selected.nameVi} — ${selected.name}`}
+                className="aspect-square w-full max-w-[220px] self-center rounded-xl bg-white object-contain"
+              />
               <dl className="grid grid-cols-2 gap-4 text-sm">
                 <div>
-                  <dt className="text-muted-foreground">{t("Pack format", "Quy cách")}</dt>
+                  <dt className="text-muted-foreground">{t("Net weight / volume", "Khối lượng tịnh")}</dt>
                   <dd className="font-medium">{selected.pack}</dd>
                 </div>
                 <div>
-                  <dt className="text-muted-foreground">{t("Units / carton", "Đơn vị / thùng")}</dt>
-                  <dd className="font-medium">{selected.unitsPerCarton}</dd>
+                  <dt className="text-muted-foreground">{t("Carton spec", "Quy cách thùng")}</dt>
+                  <dd className="font-medium">{selected.cartonSpec}</dd>
                 </div>
                 <div>
                   <dt className="text-muted-foreground">
-                    {t("Carton dimensions", "Kích thước thùng")}
+                    {t("Packaging detail", "Chi tiết đóng gói")}
                   </dt>
                   <dd className="font-medium">{selected.cartonDims}</dd>
                 </div>
+
                 <div>
                   <dt className="text-muted-foreground">{t("Shelf life", "Hạn sử dụng")}</dt>
                   <dd className="font-medium">{selected.shelfLife}</dd>
