@@ -26,6 +26,8 @@ export function Hero() {
     return () => clearInterval(id);
   }, []);
 
+  const current = slides[active]!;
+
   const stats = [
     { value: `${productCount}+`, en: "Wholesale SKUs", vi: "Mã hàng sỉ" },
     { value: `${categories.length}`, en: "Categories", vi: "Nhóm hàng" },
@@ -110,9 +112,9 @@ export function Hero() {
               <div className="flex items-center justify-between gap-4 border-t border-border px-5 py-4">
                 <div>
                   <p className="font-serif text-lg font-semibold text-foreground">
-                    {t(slides[active].en, slides[active].vi)}
+                    {t(current.en, current.vi)}
                   </p>
-                  <p className="text-xs text-muted-foreground">{slides[active].meta}</p>
+                  <p className="text-xs text-muted-foreground">{current.meta}</p>
                 </div>
                 <div className="flex gap-1.5">
                   {slides.map((s, i) => (
