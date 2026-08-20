@@ -1,96 +1,58 @@
-import { Award, Leaf, ShieldCheck, Sparkles, ThermometerSnowflake, Wheat } from "lucide-react";
+import { Check } from "lucide-react";
 
-import stRice from "@/assets/product-st25-rice.jpg";
 import { useI18n } from "@/lib/i18n";
+import st25 from "@/assets/product-st25-rice.jpg";
 
 export function ST25Spotlight() {
   const { t } = useI18n();
 
-  const points = [
-    {
-      icon: Leaf,
-      en: "Natural pandan fragrance",
-      vi: "Hương lá dứa tự nhiên",
-      enD: "Bred in Soc Trang from the Mekong Delta's aromatic lines — no added flavouring.",
-      viD: "Lai tạo tại Sóc Trăng từ dòng gạo thơm ĐBSCL — không hương liệu.",
-    },
-    {
-      icon: ThermometerSnowflake,
-      en: "Stays soft when chilled & reheated",
-      vi: "Vẫn mềm khi để lạnh & hâm nóng",
-      enD: "Holds texture through service, bain-marie holding and next-day reheating.",
-      viD: "Giữ kết cấu khi phục vụ, giữ nóng và hâm lại ngày hôm sau.",
-    },
-    {
-      icon: Wheat,
-      en: "High-yield commercial grain",
-      vi: "Hạt gạo cho năng suất cao",
-      enD: "Consistent expansion per kilo — predictable plate costs for high-volume kitchens.",
-      viD: "Nở đều theo mỗi kg — chi phí mỗi phần ăn ổn định cho bếp lớn.",
-    },
+  const benefits = [
+    ["Soft, aromatic grain that holds through service", "Hạt cơm dẻo thơm, giữ được suốt ca phục vụ"],
+    ["Consistent milling for even yield per bag", "Xay xát đồng đều, định lượng ổn định mỗi bao"],
+    ["18 kg, 5 kg and 2 kg formats for any kitchen", "Quy cách 18 kg, 5 kg và 2 kg cho mọi bếp"],
   ];
 
-  const badges = ["HACCP", "ISO 22000", "Global G.A.P."];
-
   return (
-    <section className="bg-primary-deep py-20 text-primary-foreground">
-      <div className="mx-auto grid max-w-7xl items-center gap-14 px-4 lg:grid-cols-2">
-        <div className="relative">
+    <section id="st25" className="border-b border-border bg-primary py-20 text-primary-foreground">
+      <div className="mx-auto grid max-w-7xl items-center gap-12 px-6 lg:grid-cols-2">
+        <div className="overflow-hidden rounded-3xl border border-white/10">
           <img
-            src={stRice}
-            alt={t("ST25 Vilaconic rice 20kg wholesale sack", "Bao gạo ST25 Vilaconic 20kg bán sỉ")}
+            src={st25}
+            alt={t("ST25 Vilaconic rice packaging", "Bao gạo ST25 Vilaconic")}
+            width={1024}
+            height={1024}
             loading="lazy"
-            width={800}
-            height={800}
-            className="w-full rounded-[2rem] object-cover shadow-lift"
+            className="size-full object-cover"
           />
-          <div className="absolute -bottom-6 left-6 flex items-center gap-3 rounded-2xl bg-gold px-5 py-4 text-gold-foreground shadow-gold">
-            <Award className="size-6" aria-hidden />
-            <div className="text-sm leading-tight">
-              <p className="font-semibold">{t("World's Best Rice", "Gạo ngon nhất thế giới")}</p>
-              <p className="text-xs opacity-80">Vilaconic ST25</p>
-            </div>
-          </div>
         </div>
-
         <div>
-          <span className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/15 px-4 py-1.5 text-xs font-semibold text-gold">
-            <Sparkles className="size-3.5" aria-hidden /> {t("Flagship line", "Sản phẩm chủ lực")}
-          </span>
-          <h2 className="text-balance-tight mt-5 font-display text-3xl font-semibold sm:text-4xl">
-            {t(
-              "ST25 Vilaconic — the world champion grain, direct to your kitchen",
-              "ST25 Vilaconic — hạt gạo vô địch thế giới, giao thẳng tới bếp của bạn",
-            )}
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gold">
+            {t("Signature line", "Sản phẩm chủ lực")}
+          </p>
+          <h2 className="mt-3 font-serif text-3xl font-semibold tracking-tight md:text-4xl">
+            {t("ST25 Vilaconic — World's Best Rice heritage", "ST25 Vilaconic — Gạo ngon nhất thế giới")}
           </h2>
-          <p className="mt-4 text-primary-foreground/75">
+          <p className="mt-4 max-w-xl text-primary-foreground/80">
             {t(
-              "As an authorised Australian distributor of Vilaconic, we import ST25 by the container and hold pallet stock in Wingfield — so restaurants and grocers get championship rice without the import wait.",
-              "Là nhà phân phối được uỷ quyền của Vilaconic tại Úc, chúng tôi nhập ST25 theo container và trữ hàng pallet tại Wingfield — nhà hàng và siêu thị nhận gạo vô địch mà không phải chờ nhập khẩu.",
+              "Grown in the Sóc Trăng delta and milled by Vilaconic, ST25 carries the fragrance and tenderness that made it a world champion. We import it directly, so your kitchen gets the same crop quality every order.",
+              "Trồng tại vùng Sóc Trăng và xay xát bởi Vilaconic, gạo ST25 giữ trọn hương thơm và độ dẻo đã làm nên danh hiệu thế giới. Chúng tôi nhập trực tiếp để mỗi đơn hàng đều cùng một chất lượng.",
             )}
           </p>
-
-          <ul className="mt-8 space-y-5">
-            {points.map((p) => (
-              <li key={p.en} className="flex gap-4">
-                <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-primary-foreground/10 text-gold">
-                  <p.icon className="size-5" aria-hidden />
-                </span>
-                <div>
-                  <h3 className="font-display text-lg font-semibold">{t(p.en, p.vi)}</h3>
-                  <p className="mt-1 text-sm text-primary-foreground/70">{t(p.enD, p.viD)}</p>
-                </div>
+          <ul className="mt-6 space-y-3">
+            {benefits.map(([en, vi]) => (
+              <li key={en} className="flex items-start gap-3 text-sm">
+                <Check className="mt-0.5 size-4 shrink-0 text-gold" aria-hidden />
+                {t(en!, vi!)}
               </li>
             ))}
           </ul>
-
-          <div className="mt-9 flex flex-wrap gap-3">
-            {badges.map((b) => (
+          <div className="mt-8 flex flex-wrap gap-2">
+            {["HACCP", "ISO 22000", "Global G.A.P."].map((b) => (
               <span
                 key={b}
-                className="inline-flex items-center gap-2 rounded-full border border-primary-foreground/20 bg-primary-foreground/10 px-4 py-2 text-xs font-semibold"
+                className="rounded-full border border-gold/40 px-3.5 py-1.5 text-xs font-semibold text-gold"
               >
-                <ShieldCheck className="size-4 text-gold" aria-hidden /> {b}
+                {b}
               </span>
             ))}
           </div>

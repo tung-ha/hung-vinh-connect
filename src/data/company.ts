@@ -1,17 +1,10 @@
 export const company = {
-  name: "Hung Vinh Asian Food",
-  legalName: "Hung & Vinh Asian Food Pty Ltd",
-  short: "HV Asian Food",
+  name: "Hung & Vinh Asian Food Pty Ltd",
+  shortName: "Hung Vinh Asian Food",
   abn: "88 699 898 238",
-  address: "29 Second St, Wingfield SA 5013, Australia",
-  street: "29 Second St",
-  suburb: "Wingfield",
-  state: "SA",
-  postcode: "5013",
+  address: "29 Second St, Wingfield SA 5013",
   phone: "0450 564 544",
   phoneHref: "tel:+61450564544",
   email: "vinhtran2671979@gmail.com",
-  emailHref: "mailto:vinhtran2671979@gmail.com",
-  domain: "hungvinhasianfood.com.au",
   mapsUrl: "https://www.google.com/maps/search/?api=1&query=29+Second+St+Wingfield+SA+5013",
-} as const;
+};

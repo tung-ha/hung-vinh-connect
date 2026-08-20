@@ -1,41 +1,44 @@
-import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+  type ReactNode,
+} from "react";
 
-export type Lang = "en" | "vi";
+export type Locale = "en" | "vi";
 
 type I18nValue = {
-  lang: Lang;
-  setLang: (lang: Lang) => void;
+  locale: Locale;
+  setLocale: (l: Locale) => void;
   t: (en: string, vi: string) => string;
 };
 
-const I18nContext = createContext<I18nValue | null>(null);
-
-const STORAGE_KEY = "hv-lang";
+const I18nContext = createContext<I18nValue>({
+  locale: "en",
+  setLocale: () => {},
+  t: (en) => en,
+});
 
 export function I18nProvider({ children }: { children: ReactNode }) {
-  const [lang, setLangState] = useState<Lang>("en");
+  const [locale, setLocaleState] = useState<Locale>("en");
 
   useEffect(() => {
-    const stored = window.localStorage.getItem(STORAGE_KEY);
-    if (stored === "vi" || stored === "en") setLangState(stored);
+    const stored = window.localStorage.getItem("hv-locale");
+    if (stored === "vi" || stored === "en") setLocaleState(stored);
   }, []);
 
-  useEffect(() => {
-    document.documentElement.lang = lang;
-  }, [lang]);
-
-  const setLang = useCallback((next: Lang) => {
-    setLangState(next);
-    window.localStorage.setItem(STORAGE_KEY, next);
+  const setLocale = useCallback((l: Locale) => {
+    setLocaleState(l);
+    window.localStorage.setItem("hv-locale", l);
   }, []);
 
-  const t = useCallback((en: string, vi: string) => (lang === "vi" ? vi : en), [lang]);
+  const t = useCallback((en: string, vi: string) => (locale === "vi" ? vi : en), [locale]);
 
-  return <I18nContext.Provider value={{ lang, setLang, t }}>{children}</I18nContext.Provider>;
+  return <I18nContext.Provider value={{ locale, setLocale, t }}>{children}</I18nContext.Provider>;
 }
 
 export function useI18n() {
-  const ctx = useContext(I18nContext);
-  if (!ctx) throw new Error("useI18n must be used inside I18nProvider");
-  return ctx;
+  return useContext(I18nContext);
 }
