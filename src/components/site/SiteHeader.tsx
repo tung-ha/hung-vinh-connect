@@ -1,17 +1,18 @@
 import { useState } from "react";
+import { Link } from "@tanstack/react-router";
 import { Menu, Phone, X } from "lucide-react";
 
 import { company } from "@/data/company";
 import { useI18n } from "@/lib/i18n";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 
-const navLinks = [
-  { href: "#catalog", en: "Catalog", vi: "Danh mục" },
-  { href: "#st25", en: "ST25 Rice", vi: "Gạo ST25" },
-  { href: "#who", en: "Who We Serve", vi: "Khách hàng" },
-  { href: "#process", en: "How It Works", vi: "Quy trình" },
-  { href: "#faq", en: "FAQ", vi: "Hỏi đáp" },
-];
+export const navLinks = [
+  { to: "/", en: "Home", vi: "Trang Chủ" },
+  { to: "/san-pham", en: "Products", vi: "Sản Phẩm" },
+  { to: "/gao-st25", en: "ST25 Rice", vi: "Gạo ST25" },
+  { to: "/ve-chung-toi", en: "About Us", vi: "Về Chúng Tôi" },
+  { to: "/lien-he", en: "Contact", vi: "Liên Hệ" },
+] as const;
 
 export function SiteHeader() {
   const { t } = useI18n();
@@ -39,7 +40,7 @@ export function SiteHeader() {
 
       <div className="glass-header border-b border-border">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-6 py-3.5">
-          <a href="#top" className="flex items-center gap-3 py-0.5 pr-2">
+          <Link to="/" className="flex items-center gap-3 py-0.5 pr-2">
             <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-primary font-serif text-lg font-bold text-primary-foreground">
               HV
             </span>
@@ -51,28 +52,30 @@ export function SiteHeader() {
                 Asian Food
               </span>
             </span>
-          </a>
+          </Link>
 
           <nav className="hidden items-center gap-7 lg:flex">
             {navLinks.map((l) => (
-              <a
-                key={l.href}
-                href={l.href}
+              <Link
+                key={l.to}
+                to={l.to}
+                activeOptions={{ exact: l.to === "/" }}
+                activeProps={{ className: "text-primary font-semibold" }}
                 className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
               >
                 {t(l.en, l.vi)}
-              </a>
+              </Link>
             ))}
           </nav>
 
           <div className="hidden items-center gap-3 lg:flex">
             <LanguageSwitcher />
-            <a
-              href="#rfq"
+            <Link
+              to="/lien-he"
               className="rounded-full bg-gold px-5 py-2.5 text-sm font-semibold text-gold-foreground shadow-sm ring-1 ring-gold/30 transition-all hover:shadow-md"
             >
-              {t("Request Wholesale Pricing", "Nhận báo giá sỉ")}
-            </a>
+              {t("Get wholesale quote", "Báo Giá Sỉ")}
+            </Link>
           </div>
 
           <button
@@ -89,25 +92,25 @@ export function SiteHeader() {
           <div className="border-t border-border bg-card px-6 py-4 lg:hidden">
             <nav className="flex flex-col gap-3">
               {navLinks.map((l) => (
-                <a
-                  key={l.href}
-                  href={l.href}
+                <Link
+                  key={l.to}
+                  to={l.to}
                   onClick={() => setOpen(false)}
                   className="text-sm font-medium text-foreground"
                 >
                   {t(l.en, l.vi)}
-                </a>
+                </Link>
               ))}
             </nav>
             <div className="mt-4 flex items-center justify-between gap-3">
               <LanguageSwitcher />
-              <a
-                href="#rfq"
+              <Link
+                to="/lien-he"
                 onClick={() => setOpen(false)}
                 className="rounded-full bg-gold px-4 py-2 text-sm font-semibold text-gold-foreground shadow-sm"
               >
-                {t("Request Pricing", "Nhận báo giá")}
-              </a>
+                {t("Get a quote", "Báo Giá Sỉ")}
+              </Link>
             </div>
           </div>
         )}

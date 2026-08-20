@@ -5,7 +5,7 @@ import { company } from "@/data/company";
 import { categories } from "@/data/products";
 import { useI18n } from "@/lib/i18n";
 
-export function RfqForm() {
+export function RfqForm({ prefillItem }: { prefillItem?: string | undefined }) {
   const { t } = useI18n();
   const [sent, setSent] = useState(false);
   const [interests, setInterests] = useState<string[]>([]);
@@ -23,15 +23,15 @@ export function RfqForm() {
   const label = "block text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground";
 
   return (
-    <section id="rfq" className="border-b border-border py-20">
+    <section className="border-b border-border py-16 md:py-20">
       <div className="mx-auto grid max-w-7xl gap-12 px-6 lg:grid-cols-[0.9fr_1.1fr]">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gold-foreground">
             {t("Request for quote", "Yêu cầu báo giá")}
           </p>
-          <h2 className="mt-3 font-serif text-3xl font-semibold tracking-tight md:text-4xl">
-            {t("Tell us what your kitchen needs", "Cho chúng tôi biết bếp của bạn cần gì")}
-          </h2>
+          <h1 className="mt-3 font-serif text-3xl font-semibold tracking-tight md:text-4xl">
+            {t("Contact & wholesale quote", "Liên Hệ & Báo Giá Sỉ")}
+          </h1>
           <p className="mt-4 text-muted-foreground">
             {t(
               "Wholesale accounts only. We reply with carton pricing and availability within one business day.",
@@ -52,13 +52,13 @@ export function RfqForm() {
           {sent ? (
             <div className="py-8 text-center">
               <CheckCircle2 className="mx-auto size-12 text-gold" aria-hidden />
-              <h3 className="mt-4 font-serif text-2xl font-semibold">
+              <h2 className="mt-4 font-serif text-2xl font-semibold">
                 {t("Inquiry received", "Đã nhận yêu cầu")}
-              </h3>
-              <p className="mt-2 text-sm text-muted-foreground">
+              </h2>
+              <p className="mt-3 text-sm text-muted-foreground">
                 {t(
-                  "Thanks — our team will be in touch within one business day. Need it sooner?",
-                  "Cảm ơn bạn — chúng tôi sẽ liên hệ trong một ngày làm việc. Cần gấp hơn?",
+                  "Thank you — our wholesale team will reply within one business day.",
+                  "Cảm ơn bạn — bộ phận bán sỉ sẽ phản hồi trong một ngày làm việc.",
                 )}
               </p>
               <div className="mt-6 flex flex-wrap justify-center gap-3">
@@ -66,7 +66,7 @@ export function RfqForm() {
                   href={company.phoneHref}
                   className="rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground"
                 >
-                  {t("Call us", "Gọi ngay")}
+                  {company.phone}
                 </a>
                 <a
                   href={`mailto:${company.email}`}
@@ -92,19 +92,51 @@ export function RfqForm() {
               </div>
               <div>
                 <label className={label} htmlFor="type">
-                  {t("Business type", "Loại hình")}
+                  {t("Business type", "Loại hình kinh doanh")}
                 </label>
                 <select id="type" className={`mt-2 ${field}`}>
-                  <option>{t("Restaurant / café", "Nhà hàng / quán")}</option>
-                  <option>{t("Grocer / retailer", "Cửa hàng / siêu thị")}</option>
-                  <option>{t("Distributor / caterer", "Phân phối / bếp công nghiệp")}</option>
+                  <option>{t("Restaurant", "Nhà hàng")}</option>
+                  <option>{t("Grocer / supermarket", "Siêu thị tạp hóa")}</option>
+                  <option>{t("Distributor", "Nhà phân phối")}</option>
                 </select>
               </div>
               <div>
+                <label className={label} htmlFor="contact">
+                  {t("Contact name", "Người liên hệ")}
+                </label>
+                <input id="contact" required className={`mt-2 ${field}`} />
+              </div>
+              <div>
+                <label className={label} htmlFor="phone">
+                  {t("Phone", "Số điện thoại")}
+                </label>
+                <input id="phone" required className={`mt-2 ${field}`} />
+              </div>
+              <div>
+                <label className={label} htmlFor="email">
+                  Email
+                </label>
+                <input id="email" type="email" required className={`mt-2 ${field}`} />
+              </div>
+              <div>
                 <label className={label} htmlFor="suburb">
-                  {t("Suburb / postcode", "Khu vực / mã bưu điện")}
+                  {t("Suburb", "Khu vực (Suburb)")}
                 </label>
                 <input id="suburb" required className={`mt-2 ${field}`} />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className={label} htmlFor="state">
+                    {t("State", "Tiểu bang")}
+                  </label>
+                  <input id="state" defaultValue="SA" className={`mt-2 ${field}`} />
+                </div>
+                <div>
+                  <label className={label} htmlFor="postcode">
+                    {t("Postcode", "Mã bưu điện")}
+                  </label>
+                  <input id="postcode" className={`mt-2 ${field}`} />
+                </div>
               </div>
 
               <fieldset className="md:col-span-2">
@@ -128,46 +160,28 @@ export function RfqForm() {
                 </div>
               </fieldset>
 
-              <div>
-                <label className={label} htmlFor="volume">
-                  {t("Estimated monthly volume", "Sản lượng hàng tháng dự kiến")}
-                </label>
-                <input
-                  id="volume"
-                  placeholder={t("e.g. 20 cartons", "vd: 20 thùng")}
-                  className={`mt-2 ${field}`}
-                />
-              </div>
-              <div>
-                <label className={label} htmlFor="contact">
-                  {t("Contact name", "Người liên hệ")}
-                </label>
-                <input id="contact" required className={`mt-2 ${field}`} />
-              </div>
-              <div>
-                <label className={label} htmlFor="email">
-                  {t("Email", "Email")}
-                </label>
-                <input id="email" type="email" required className={`mt-2 ${field}`} />
-              </div>
-              <div>
-                <label className={label} htmlFor="phone">
-                  {t("Phone", "Điện thoại")}
-                </label>
-                <input id="phone" required className={`mt-2 ${field}`} />
-              </div>
               <div className="md:col-span-2">
                 <label className={label} htmlFor="notes">
-                  {t("Notes", "Ghi chú")}
+                  {t("Notes & estimated volume", "Ghi chú & số lượng dự kiến")}
                 </label>
-                <textarea id="notes" rows={3} className={`mt-2 ${field}`} />
+                <textarea
+                  id="notes"
+                  rows={4}
+                  defaultValue={
+                    prefillItem
+                      ? t(`Quote request for: ${prefillItem}`, `Yêu cầu báo giá cho: ${prefillItem}`)
+                      : ""
+                  }
+                  placeholder={t("e.g. 20 cartons per month", "vd: 20 thùng mỗi tháng")}
+                  className={`mt-2 ${field}`}
+                />
               </div>
 
               <button
                 type="submit"
                 className="md:col-span-2 rounded-full bg-gold px-6 py-3 text-sm font-semibold text-gold-foreground shadow-sm transition-shadow hover:shadow-md"
               >
-                {t("Send wholesale inquiry", "Gửi yêu cầu báo giá")}
+                {t("Send wholesale inquiry", "Gửi Yêu Cầu Báo Giá Sỉ")}
               </button>
             </form>
           )}

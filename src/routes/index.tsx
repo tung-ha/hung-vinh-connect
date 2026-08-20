@@ -1,19 +1,16 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { ArrowRight } from "lucide-react";
 
-import { SiteHeader } from "@/components/site/SiteHeader";
-import { Hero } from "@/components/site/Hero";
-import { ProductCatalog } from "@/components/site/ProductCatalog";
-import { ST25Spotlight } from "@/components/site/ST25Spotlight";
+import { HeroSlideshow } from "@/components/site/HeroSlideshow";
+import { CategoryHighlights } from "@/components/site/CategoryHighlights";
 import { WhoWeServe } from "@/components/site/WhoWeServe";
-import { WholesaleSteps } from "@/components/site/WholesaleSteps";
-import { RfqForm } from "@/components/site/RfqForm";
-import { FaqSection } from "@/components/site/FaqSection";
-import { SiteFooter } from "@/components/site/SiteFooter";
+import { CtaBanner } from "@/components/site/CtaBanner";
 import { company } from "@/data/company";
+import { useI18n } from "@/lib/i18n";
 
-const title = "Hung Vinh Asian Food | Vietnamese Wholesale Adelaide";
+const title = "Hung Vinh Asian Food | Thực Phẩm Đông Nam Á Bán Sỉ Adelaide";
 const description =
-  "Adelaide direct importer of Vietnamese & Southeast Asian food. Wholesale ST25 rice, fish sauce, noodles and frozen lines by the carton.";
+  "Nhà nhập khẩu trực tiếp tại Adelaide: gạo ST25, nước mắm, cốt gia vị, đồ đông lạnh và nước giải khát bán sỉ cho nhà hàng, siêu thị trên toàn nước Úc.";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -30,6 +27,8 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
+  const { t } = useI18n();
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
@@ -47,19 +46,53 @@ function Index() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <SiteHeader />
-      <main>
-        <Hero />
-        <ProductCatalog />
-        <ST25Spotlight />
-        <WhoWeServe />
-        <WholesaleSteps />
-        <RfqForm />
-        <FaqSection />
-      </main>
-      <SiteFooter />
+    <main>
+      <HeroSlideshow />
+      <CategoryHighlights />
+
+      <section className="border-b border-border py-20">
+        <div className="mx-auto grid max-w-7xl gap-10 px-6 lg:grid-cols-[1fr_0.8fr] lg:items-center">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gold-foreground">
+              {t("About us", "Về chúng tôi")}
+            </p>
+            <h2 className="mt-3 font-serif text-3xl font-semibold tracking-tight md:text-4xl">
+              {t("About Hung Vinh Asian Food", "Về Hung Vinh Asian Food")}
+            </h2>
+            <p className="mt-4 max-w-2xl text-muted-foreground">
+              {t(
+                `${company.name} is a direct importer based in Wingfield, South Australia. We source rice, sauces, pastes, frozen lines and beverages straight from Vietnamese and Southeast Asian producers and supply them wholesale by the carton or pallet.`,
+                `${company.name} là nhà nhập khẩu trực tiếp tại Wingfield, Nam Úc. Chúng tôi nhập gạo, nước chấm, cốt gia vị, hàng đông lạnh và đồ uống trực tiếp từ nhà sản xuất Việt Nam & Đông Nam Á, phân phối sỉ theo thùng hoặc pallet.`,
+              )}
+            </p>
+            <Link
+              to="/ve-chung-toi"
+              className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline"
+            >
+              {t("Read our story & process", "Xem câu chuyện & quy trình")}
+              <ArrowRight className="size-4" aria-hidden />
+            </Link>
+          </div>
+          <dl className="grid gap-4 sm:grid-cols-2">
+            <div className="rounded-2xl border border-border bg-card p-5">
+              <dt className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                ABN
+              </dt>
+              <dd className="mt-1 font-medium">{company.abn}</dd>
+            </div>
+            <div className="rounded-2xl border border-border bg-card p-5">
+              <dt className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                {t("Warehouse", "Kho hàng")}
+              </dt>
+              <dd className="mt-1 font-medium">{company.address}</dd>
+            </div>
+          </dl>
+        </div>
+      </section>
+
+      <WhoWeServe />
+      <CtaBanner />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-    </div>
+    </main>
   );
 }
