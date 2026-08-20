@@ -1,19 +1,42 @@
-import { MapPin } from "lucide-react";
-
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { company } from "@/data/company";
 import { useI18n } from "@/lib/i18n";
 
 const faqs = [
-  ["Is there a minimum order?", "Có yêu cầu đơn tối thiểu không?", "Wholesale orders start from 10 cartons or one mixed pallet for metro delivery.", "Đơn sỉ bắt đầu từ 10 thùng hoặc một pallet hàng hỗn hợp cho giao nội thành."],
-  ["Do you deliver outside Adelaide?", "Có giao ngoài Adelaide không?", "Yes — regional South Australia and interstate freight can be arranged on request.", "Có — giao hàng vùng ngoại ô Nam Úc và liên bang theo yêu cầu."],
-  ["What payment terms are available?", "Điều khoản thanh toán thế nào?", "Prepay on first order, then 7–14 day trade terms for established accounts.", "Đơn đầu thanh toán trước, sau đó công nợ 7–14 ngày cho khách quen."],
-  ["Can I collect from the warehouse?", "Có thể tự lấy hàng tại kho không?", "Yes, pickup is available at 29 Second St, Wingfield during business hours.", "Có, nhận hàng tại 29 Second St, Wingfield trong giờ làm việc."],
+  [
+    "What is the minimum order quantity (MOQ)?",
+    "Số lượng đặt hàng tối thiểu (MOQ) là bao nhiêu?",
+    "Wholesale orders start from 10 cartons, or one mixed pallet for metro delivery. Rice can be ordered from 10 bags.",
+    "Đơn sỉ bắt đầu từ 10 thùng, hoặc một pallet hàng hỗn hợp cho giao nội thành. Gạo có thể đặt từ 10 bao.",
+  ],
+  [
+    "Do you ship interstate (Melbourne, Sydney, Brisbane...)?",
+    "Kho hàng có giao đi các bang khác (Melbourne, Sydney, Brisbane...) không?",
+    "Yes. Adelaide metro is delivered by our own vans in 24–48 hours; interstate orders ship by pallet freight with a quoted transit time.",
+    "Có. Nội thành Adelaide giao bằng xe của công ty trong 24–48 giờ; đơn liên bang gửi bằng vận chuyển pallet kèm thời gian dự kiến trong báo giá.",
+  ],
+  [
+    "Can my business request samples?",
+    "Doanh nghiệp có thể nhận hàng mẫu (sample) không?",
+    "Yes — 2 kg ST25 sample bags and single units of sauces or pastes are available for verified ABN holders.",
+    "Có — túi gạo ST25 2 kg và mẫu lẻ nước mắm, cốt gia vị dành cho doanh nghiệp có ABN hợp lệ.",
+  ],
+  [
+    "Who can open a wholesale account?",
+    "Ai có thể mở tài khoản mua sỉ?",
+    "Restaurants, cafés, grocers, supermarkets, caterers and distributors with a registered ABN. We do not sell to the public.",
+    "Nhà hàng, quán cà phê, cửa hàng, siêu thị, bếp công nghiệp và nhà phân phối có ABN. Chúng tôi không bán lẻ cho khách cá nhân.",
+  ],
+  [
+    "How long do quotes and deliveries take?",
+    "Thời gian xử lý báo giá và giao hàng?",
+    "Quotes are returned within one business day. Confirmed Adelaide orders are delivered in 24–48 hours from the Wingfield warehouse.",
+    "Báo giá được gửi trong vòng một ngày làm việc. Đơn đã xác nhận tại Adelaide được giao trong 24–48 giờ từ kho Wingfield.",
+  ],
 ];
 
 export function FaqSection() {
@@ -21,39 +44,18 @@ export function FaqSection() {
 
   return (
     <section id="faq" className="border-b border-border bg-sand/40 py-20">
-      <div className="mx-auto grid max-w-7xl gap-12 px-6 lg:grid-cols-[1.2fr_0.8fr]">
-        <div>
-          <h2 className="font-serif text-3xl font-semibold tracking-tight md:text-4xl">
-            {t("Trade FAQ", "Câu hỏi thường gặp")}
-          </h2>
-          <Accordion type="single" collapsible className="mt-6">
-            {faqs.map(([q, qv, a, av]) => (
-              <AccordionItem key={q} value={q!}>
-                <AccordionTrigger className="text-left font-medium">{t(q!, qv!)}</AccordionTrigger>
-                <AccordionContent className="text-muted-foreground">{t(a!, av!)}</AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
-        </div>
-
-        <aside className="h-fit rounded-3xl border border-border bg-card p-7">
-          <MapPin className="size-5 text-gold" aria-hidden />
-          <h3 className="mt-4 font-serif text-xl font-semibold">
-            {t("Wingfield warehouse", "Kho Wingfield")}
-          </h3>
-          <p className="mt-2 text-sm text-muted-foreground">{company.address}</p>
-          <p className="mt-1 text-sm text-muted-foreground">
-            {t("Mon–Fri 8:30am – 5:00pm", "Thứ 2–6, 8:30 – 17:00")}
-          </p>
-          <a
-            href={company.mapsUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="mt-5 inline-flex rounded-full border border-primary/20 px-5 py-2.5 text-sm font-semibold text-primary hover:bg-primary/5"
-          >
-            {t("Open in Google Maps", "Mở Google Maps")}
-          </a>
-        </aside>
+      <div className="mx-auto max-w-4xl px-6">
+        <h2 className="font-serif text-3xl font-semibold tracking-tight md:text-4xl">
+          {t("Trade FAQ", "Câu Hỏi Thường Gặp")}
+        </h2>
+        <Accordion type="single" collapsible className="mt-8">
+          {faqs.map(([q, qv, a, av]) => (
+            <AccordionItem key={q} value={q!}>
+              <AccordionTrigger className="text-left font-medium">{t(q!, qv!)}</AccordionTrigger>
+              <AccordionContent className="text-muted-foreground">{t(a!, av!)}</AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
       </div>
     </section>
   );
