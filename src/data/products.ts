@@ -11,104 +11,335 @@ export type Product = {
   id: string;
   name: string;
   nameVi: string;
+  brand: string;
   category: Category;
   sku: string;
+  /** Net weight / volume per unit */
   pack: string;
   origin: string;
+  /** Carton / tray packing spec */
+  cartonSpec: string;
   unitsPerCarton: number;
   cartonDims: string;
   shelfLife: string;
+  image: string;
 };
 
 export const categories: { id: Category; en: string; vi: string }[] = [
-  { id: "rice", en: "Rice & Grains", vi: "Gạo & Ngũ cốc" },
-  { id: "sauces", en: "Sauces", vi: "Nước chấm" },
-  { id: "pastes", en: "Pastes & Seasoning", vi: "Gia vị & Sốt" },
-  { id: "noodles", en: "Noodles", vi: "Bún & Mì" },
-  { id: "dried", en: "Dried Goods", vi: "Hàng khô" },
-  { id: "drinks", en: "Beverages", vi: "Đồ uống" },
-  { id: "frozen", en: "Frozen", vi: "Hàng đông lạnh" },
+  { id: "rice", en: "Premium Rice", vi: "Gạo Cao Cấp" },
+  { id: "sauces", en: "Traditional Fish Sauce", vi: "Nước Mắm Truyền Thống" },
+  { id: "pastes", en: "Cooking Sauce Bases", vi: "Cốt Gia Vị & Sốt Nấu" },
+  { id: "drinks", en: "Beverages", vi: "Nước Giải Khát" },
+  { id: "frozen", en: "Ready Meals & Frozen", vi: "Đồ Hộp & Đông Lạnh" },
+  { id: "dried", en: "Dried Goods & Nuts", vi: "Đồ Khô & Hạt" },
+  { id: "noodles", en: "Noodles & Crackers", vi: "Mì & Bánh Đa" },
 ];
 
-const make = (
-  id: string,
-  name: string,
-  nameVi: string,
-  category: Category,
-  pack: string,
-  origin: string,
-  unitsPerCarton: number,
-  cartonDims: string,
-  shelfLife: string,
-): Product => ({
-  id,
-  name,
-  nameVi,
-  category,
-  sku: `HV-${id.toUpperCase()}`,
-  pack,
-  origin,
-  unitsPerCarton,
-  cartonDims,
-  shelfLife,
+const images = import.meta.glob<string>("../assets/products/*.jpg", {
+  eager: true,
+  query: "?url",
+  import: "default",
 });
 
+const img = (key: string): string => images[`../assets/products/${key}.jpg`] ?? "";
+
+type Input = Omit<Product, "sku" | "image"> & { sku?: string; image: string };
+
+const make = (p: Input): Product => ({
+  ...p,
+  sku: p.sku ?? `HV-${p.id.toUpperCase()}`,
+  image: img(p.image),
+});
+
+const RICE_DIMS = "Palletised — 1,000 kg / pallet";
+
 export const products: Product[] = [
-  make("st25-18", "ST25 Vilaconic Rice 18kg", "Gạo ST25 Vilaconic 18kg", "rice", "18 kg bag", "Sóc Trăng, Vietnam", 1, "60 × 38 × 16 cm", "24 months"),
-  make("st25-5", "ST25 Vilaconic Rice 5kg", "Gạo ST25 Vilaconic 5kg", "rice", "5 kg bag", "Sóc Trăng, Vietnam", 4, "42 × 30 × 24 cm", "24 months"),
-  make("st25-2", "ST25 Vilaconic Rice 2kg", "Gạo ST25 Vilaconic 2kg", "rice", "2 kg bag", "Sóc Trăng, Vietnam", 10, "45 × 32 × 26 cm", "24 months"),
-  make("jasmine-18", "Jasmine Long Grain Rice 18kg", "Gạo thơm Jasmine 18kg", "rice", "18 kg bag", "Mekong Delta, Vietnam", 1, "60 × 38 × 16 cm", "24 months"),
-  make("broken-rice", "Com Tam Broken Rice 10kg", "Gạo tấm 10kg", "rice", "10 kg bag", "Vietnam", 2, "50 × 34 × 22 cm", "18 months"),
-  make("glutinous", "Glutinous Sticky Rice 10kg", "Gạo nếp 10kg", "rice", "10 kg bag", "Vietnam", 2, "50 × 34 × 22 cm", "18 months"),
-  make("rice-flour", "Rice Flour", "Bột gạo", "rice", "400 g", "Vietnam", 30, "40 × 30 × 22 cm", "18 months"),
-  make("tapioca-starch", "Tapioca Starch", "Bột năng", "rice", "400 g", "Vietnam", 30, "40 × 30 × 22 cm", "18 months"),
+  // ── Premium Rice — Vilaconic ───────────────────────────────────────────
+  ...([
+    ["1kg", 20],
+    ["2kg", 10],
+    ["5kg", 4],
+    ["10kg", 2],
+    ["20kg", 1],
+  ] as const).map(([size, upc]) =>
+    make({
+      id: `st25-${size}`,
+      name: `Vilaconic ST25 Rice ${size}`,
+      nameVi: `Gạo ST25 Vilaconic ${size}`,
+      brand: "Vilaconic",
+      category: "rice",
+      pack: `${size} bag`,
+      origin: "Sóc Trăng, Việt Nam",
+      cartonSpec: `${upc} × ${size} / bao`,
+      unitsPerCarton: upc,
+      cartonDims: RICE_DIMS,
+      shelfLife: "24 tháng / 24 months",
+      image: "st25",
+    }),
+  ),
+  ...([
+    ["5kg", 4],
+    ["10kg", 2],
+    ["20kg", 1],
+  ] as const).map(([size, upc]) =>
+    make({
+      id: `jasmine-${size}`,
+      name: `Blue Silk Premium Jasmine Rice ${size}`,
+      nameVi: `Gạo Thơm Jasmine Blue Silk ${size}`,
+      brand: "Vilaconic",
+      category: "rice",
+      pack: `${size} bag`,
+      origin: "Việt Nam",
+      cartonSpec: `${upc} × ${size} / bao`,
+      unitsPerCarton: upc,
+      cartonDims: RICE_DIMS,
+      shelfLife: "24 tháng / 24 months",
+      image: "jasmine",
+    }),
+  ),
 
-  make("fs-40n", "Cửa Lò 40°N Fish Sauce", "Nước mắm Cửa Lò 40°N", "sauces", "650 ml", "Nghệ An, Vietnam", 12, "38 × 28 × 26 cm", "36 months"),
-  make("fs-48n", "Cửa Lò 48°N Premium Fish Sauce", "Nước mắm Cửa Lò 48°N", "sauces", "500 ml", "Nghệ An, Vietnam", 12, "36 × 27 × 24 cm", "36 months"),
-  make("fs-bulk", "Fish Sauce Catering 4.5L", "Nước mắm can 4.5L", "sauces", "4.5 L", "Vietnam", 4, "40 × 30 × 32 cm", "24 months"),
-  make("soy-light", "Light Soy Sauce", "Nước tương", "sauces", "700 ml", "Vietnam", 12, "38 × 28 × 27 cm", "24 months"),
-  make("soy-bulk", "Soy Sauce Catering 5L", "Nước tương can 5L", "sauces", "5 L", "Vietnam", 4, "40 × 30 × 33 cm", "24 months"),
-  make("hoisin", "Hoisin Sauce", "Tương đen", "sauces", "500 g", "Vietnam", 24, "40 × 30 × 20 cm", "24 months"),
-  make("chilli-sauce", "Chilli Garlic Sauce", "Tương ớt tỏi", "sauces", "700 g", "Vietnam", 12, "38 × 28 × 26 cm", "24 months"),
-  make("sriracha", "Sriracha Hot Sauce", "Tương ớt Sriracha", "sauces", "500 ml", "Vietnam", 20, "40 × 30 × 24 cm", "24 months"),
-  make("oyster", "Oyster Sauce", "Dầu hào", "sauces", "750 g", "Thailand", 12, "38 × 28 × 26 cm", "24 months"),
-  make("sweet-chilli", "Sweet Chilli Dipping Sauce", "Tương ớt ngọt", "sauces", "730 ml", "Thailand", 12, "38 × 28 × 27 cm", "24 months"),
+  // ── Fish sauce ─────────────────────────────────────────────────────────
+  make({
+    id: "fs-ngocbien",
+    name: "Ngọc Biển Fish Sauce 32°N",
+    nameVi: "Nước Mắm Ngọc Biển 32 Đạm",
+    brand: "Ngọc Biển",
+    category: "sauces",
+    pack: "500 ml / chai",
+    origin: "Việt Nam",
+    cartonSpec: "6 chai / thùng",
+    unitsPerCarton: 6,
+    cartonDims: "Đạm tổng ≥ 32°N",
+    shelfLife: "24 tháng / 24 months",
+    image: "fs-ngocbien",
+  }),
+  make({
+    id: "fs-cualo-48",
+    name: "Cửa Lò 48 Fish Sauce 30°N",
+    nameVi: "Nước Mắm Cửa Lò 48",
+    brand: "Cửa Lò (OCOP)",
+    category: "sauces",
+    pack: "500 ml / chai",
+    origin: "Cửa Lò, Nghệ An",
+    cartonSpec: "6 chai / thùng",
+    unitsPerCarton: 6,
+    cartonDims: "Đạm tổng ≥ 30°N",
+    shelfLife: "24 tháng / 24 months",
+    image: "fs-cualo-48",
+  }),
+  make({
+    id: "fs-cualo-38",
+    name: "Cửa Lò 38 Fish Sauce 20°N",
+    nameVi: "Nước Mắm Cửa Lò 38",
+    brand: "Cửa Lò (OCOP)",
+    category: "sauces",
+    pack: "650 ml / chai",
+    origin: "Cửa Lò, Nghệ An",
+    cartonSpec: "6 chai / thùng",
+    unitsPerCarton: 6,
+    cartonDims: "Đạm tổng ≥ 20°N",
+    shelfLife: "24 tháng / 24 months",
+    image: "fs-cualo-38",
+  }),
 
-  make("bbh-paste", "Bún Bò Huế Broth Paste", "Sốt bún bò Huế", "pastes", "400 g", "Huế, Vietnam", 24, "40 × 30 × 20 cm", "24 months"),
-  make("pho-paste", "Phở Broth Paste", "Sốt phở", "pastes", "400 g", "Vietnam", 24, "40 × 30 × 20 cm", "24 months"),
-  make("satay", "Chilli Satay Paste", "Sa tế", "pastes", "300 g", "Vietnam", 24, "38 × 28 × 18 cm", "24 months"),
-  make("shrimp-paste", "Fermented Shrimp Paste", "Mắm tôm", "pastes", "400 g", "Vietnam", 24, "38 × 28 × 20 cm", "24 months"),
-  make("tamarind", "Tamarind Concentrate", "Me cô đặc", "pastes", "454 g", "Thailand", 24, "38 × 28 × 20 cm", "24 months"),
-  make("curry-powder", "Vietnamese Curry Powder", "Bột cà ri", "pastes", "1 kg", "Vietnam", 10, "36 × 26 × 24 cm", "24 months"),
-  make("msg", "Seasoning Powder", "Hạt nêm", "pastes", "900 g", "Vietnam", 12, "40 × 30 × 24 cm", "24 months"),
-  make("coconut-cream", "Coconut Cream", "Nước cốt dừa", "pastes", "400 ml can", "Vietnam", 24, "40 × 27 × 12 cm", "36 months"),
+  // ── Uma Food cooking sauce bases ───────────────────────────────────────
+  ...([
+    ["bunbohue", "Hue Beef Noodle Soup Sauce", "Sốt Bún Bò Huế", "sauce-bunbohue"],
+    ["canhchua", "Sour Soup Cooking Sauce", "Sốt Nấu Canh Chua", "sauce-canhchua"],
+    ["bunrieu", "Crab Noodle Soup Sauce", "Sốt Bún Riêu", "sauce-bunrieu"],
+    ["laumam", "Fermented Fish Hotpot Base", "Nước Cốt Lẩu Mắm", "sauce-laumam"],
+    ["cakhotieu", "Braised Fish in Pepper Sauce", "Sốt Cá Kho Tiêu", "sauce-cakhotieu"],
+  ] as const).map(([id, name, nameVi, image]) =>
+    make({
+      id: `sauce-${id}`,
+      name,
+      nameVi,
+      brand: "Uma Food",
+      category: "pastes",
+      pack: "200 g / hũ",
+      origin: "Việt Nam",
+      cartonSpec: "12 hũ / thùng",
+      unitsPerCarton: 12,
+      cartonDims: "Hũ thuỷ tinh 200 g",
+      shelfLife: "18 tháng / 18 months",
+      image,
+    }),
+  ),
 
-  make("pho-noodle", "Dried Phở Rice Noodles", "Bánh phở khô", "noodles", "1 kg", "Vietnam", 20, "45 × 30 × 30 cm", "24 months"),
-  make("bun-noodle", "Dried Bún Vermicelli", "Bún khô", "noodles", "1 kg", "Vietnam", 20, "45 × 30 × 30 cm", "24 months"),
-  make("bbh-noodle", "Bún Bò Huế Thick Noodles", "Bún bò Huế sợi to", "noodles", "1 kg", "Vietnam", 20, "45 × 30 × 30 cm", "24 months"),
-  make("rice-paper", "Rice Paper 22cm", "Bánh tráng 22cm", "noodles", "500 g", "Tây Ninh, Vietnam", 20, "40 × 30 × 30 cm", "18 months"),
-  make("glass-noodle", "Mung Bean Glass Noodles", "Miến dong", "noodles", "500 g", "Vietnam", 30, "42 × 30 × 28 cm", "24 months"),
-  make("egg-noodle", "Dried Egg Noodles", "Mì trứng khô", "noodles", "1 kg", "Vietnam", 20, "45 × 30 × 30 cm", "18 months"),
-  make("instant-pho", "Instant Phở Bowl", "Phở ăn liền", "noodles", "70 g × 24", "Vietnam", 24, "44 × 30 × 26 cm", "12 months"),
+  // ── Ready meals (canned / tray) ────────────────────────────────────────
+  ...([
+    ["eel-pepper", "Braised Eel with Pepper", "Lươn Kho Tiêu", "eel-pepper"],
+    ["eel-teriyaki", "Eel with Teriyaki Sauce", "Lươn Sốt Teriyaki", "eel-teriyaki"],
+    ["mackerel-teriyaki", "Mackerel with Teriyaki Sauce", "Cá Saba Sốt Teriyaki", "mackerel-teriyaki"],
+    ["climbing-pepper", "Braised Climbing Fish with Pepper", "Cá Rô Kho Tộ", "climbing-pepper"],
+    ["snakehead-pepper", "Braised Snakehead Fish with Pepper", "Cá Lóc Kho Tiêu", "snakehead-pepper"],
+    ["goby-pepper", "Braised Goby Fish with Pepper", "Cá Bống Kho Tiêu", "goby-pepper"],
+  ] as const).map(([id, name, nameVi, image]) =>
+    make({
+      id,
+      name,
+      nameVi,
+      brand: "Vilaconic",
+      category: "frozen",
+      pack: "200 g / khay",
+      origin: "Việt Nam",
+      cartonSpec: "12 khay / thùng",
+      unitsPerCarton: 12,
+      cartonDims: "Khay 200 g, hút chân không",
+      shelfLife: "12 tháng / 12 months",
+      image,
+    }),
+  ),
 
-  make("dried-shrimp", "Dried Shrimp", "Tôm khô", "dried", "200 g", "Vietnam", 40, "40 × 30 × 22 cm", "12 months"),
-  make("wood-ear", "Dried Wood Ear Mushroom", "Nấm mèo khô", "dried", "500 g", "Vietnam", 20, "45 × 32 × 30 cm", "24 months"),
-  make("shiitake", "Dried Shiitake Mushroom", "Nấm đông cô khô", "dried", "500 g", "Vietnam", 20, "45 × 32 × 30 cm", "24 months"),
-  make("lotus-seed", "Dried Lotus Seeds", "Hạt sen khô", "dried", "500 g", "Vietnam", 20, "40 × 30 × 24 cm", "18 months"),
-  make("cinnamon", "Cassia Cinnamon Sticks", "Quế thanh", "dried", "250 g", "Yên Bái, Vietnam", 30, "38 × 28 × 24 cm", "36 months"),
-  make("star-anise", "Star Anise", "Hoa hồi", "dried", "250 g", "Lạng Sơn, Vietnam", 30, "38 × 28 × 24 cm", "36 months"),
-  make("cashew", "Roasted Cashew Nuts", "Hạt điều rang", "dried", "1 kg", "Bình Phước, Vietnam", 10, "40 × 30 × 26 cm", "12 months"),
+  // ── Tropi juice drinks ─────────────────────────────────────────────────
+  ...([
+    ["passion", "Passion Fruit Juice Drink", "Nước Chanh Dây", "drink-passion"],
+    ["sugarcane", "Sugarcane Juice Drink", "Nước Mía", "drink-sugarcane"],
+    ["durian", "Durian Juice Drink", "Nước Sầu Riêng", "drink-durian"],
+    ["lychee", "Lychee Juice Drink", "Nước Vải", "drink-lychee"],
+    ["mangosteen", "Mangosteen Juice Drink", "Nước Măng Cụt", "drink-mangosteen"],
+    ["lemon", "Lemonade Juice Drink", "Nước Chanh", "drink-lemon"],
+    ["cocktail", "Cocktail Juice Drink", "Nước Trái Cây Thập Cẩm", "drink-cocktail"],
+    ["orange", "Orange Juice Drink", "Nước Cam", "drink-orange"],
+    ["grape", "Grape Juice Drink", "Nước Nho", "drink-grape"],
+    ["strawberry", "Strawberry Juice Drink", "Nước Dâu Tây", "drink-strawberry"],
+    ["watermelon", "Watermelon Juice Drink", "Nước Dưa Hấu", "drink-watermelon"],
+    ["peach", "Peach Juice Drink", "Nước Đào", "drink-peach"],
+  ] as const).map(([id, name, nameVi, image]) =>
+    make({
+      id: `tropi-${id}`,
+      name: `Tropi ${name} 330ml`,
+      nameVi: `${nameVi} Tropi 330ml`,
+      brand: "Tropi",
+      category: "drinks",
+      pack: "330 ml / lon",
+      origin: "Việt Nam",
+      cartonSpec: "24 lon / khay",
+      unitsPerCarton: 24,
+      cartonDims: "Lon nhôm 330 ml",
+      shelfLife: "12 tháng / 12 months",
+      image,
+    }),
+  ),
 
-  make("lychee-juice", "Lychee Juice Drink", "Nước vải", "drinks", "330 ml × 24", "Vietnam", 24, "40 × 27 × 13 cm", "18 months"),
-  make("coconut-water", "Coconut Water", "Nước dừa", "drinks", "330 ml × 24", "Bến Tre, Vietnam", 24, "40 × 27 × 13 cm", "18 months"),
-  make("soymilk", "Soy Milk", "Sữa đậu nành", "drinks", "300 ml × 24", "Vietnam", 24, "40 × 27 × 15 cm", "12 months"),
-  make("vn-coffee", "Vietnamese Robusta Coffee", "Cà phê Robusta", "drinks", "500 g", "Đắk Lắk, Vietnam", 20, "40 × 30 × 22 cm", "24 months"),
-  make("jasmine-tea", "Jasmine Green Tea", "Trà xanh nhài", "drinks", "500 g", "Thái Nguyên, Vietnam", 20, "40 × 30 × 22 cm", "24 months"),
+  // ── iChill freeze-dried beverages ──────────────────────────────────────
+  ...([
+    ["peach-tea", "Peach Orange Lemongrass Tea", "Trà Đào Cam Sả", "ichill-peach-tea"],
+    ["longan", "Longan & Snow Fungus Chia Seeds Drink", "Sâm Long Nhãn Nấm Tuyết Hạt Chia", "ichill-longan"],
+    ["strawberry", "Strawberry & Hibiscus Drink", "Dâu Tây Atiso Đỏ", "ichill-strawberry"],
+  ] as const).map(([id, name, nameVi, image]) =>
+    make({
+      id: `ichill-${id}`,
+      name,
+      nameVi,
+      brand: "iChill",
+      category: "drinks",
+      pack: "1 ly / cup",
+      origin: "Việt Nam",
+      cartonSpec: "24 ly / thùng",
+      unitsPerCarton: 24,
+      cartonDims: "Ly sấy thăng hoa, pha lạnh",
+      shelfLife: "12 tháng / 12 months",
+      image,
+    }),
+  ),
 
-  make("spring-roll", "Frozen Spring Rolls", "Chả giò đông lạnh", "frozen", "1 kg", "Vietnam", 10, "40 × 30 × 24 cm", "18 months (-18°C)"),
-  make("banh-mi-pate", "Frozen Pork Pâté", "Pate heo đông lạnh", "frozen", "500 g", "Vietnam", 20, "40 × 30 × 20 cm", "12 months (-18°C)"),
-  make("gio-lua", "Frozen Vietnamese Pork Roll", "Giò lụa đông lạnh", "frozen", "500 g", "Vietnam", 20, "40 × 30 × 20 cm", "12 months (-18°C)"),
-  make("banana-leaf", "Frozen Banana Leaves", "Lá chuối đông lạnh", "frozen", "400 g", "Vietnam", 30, "45 × 32 × 24 cm", "18 months (-18°C)"),
+  // ── Dried fruit & nuts ─────────────────────────────────────────────────
+  make({
+    id: "mango-dried",
+    name: "Dried Mango",
+    nameVi: "Xoài Sấy",
+    brand: "Vilaconic",
+    category: "dried",
+    pack: "250 g / gói",
+    origin: "Việt Nam",
+    cartonSpec: "20 gói / thùng",
+    unitsPerCarton: 20,
+    cartonDims: "Túi zip 250 g",
+    shelfLife: "12 tháng / 12 months",
+    image: "mango-dried",
+  }),
+  make({
+    id: "mango-chilli",
+    name: "Salted Chilli Mango",
+    nameVi: "Xoài Sấy Muối Ớt",
+    brand: "Vilaconic",
+    category: "dried",
+    pack: "250 g / gói",
+    origin: "Việt Nam",
+    cartonSpec: "20 gói / thùng",
+    unitsPerCarton: 20,
+    cartonDims: "Túi zip 250 g",
+    shelfLife: "12 tháng / 12 months",
+    image: "mango-chilli",
+  }),
+  ...([
+    ["cashew-chilli", "Chilli & Garlic Coated Cashew", "Hạt Điều Tỏi Ớt", "250 g / hũ", "24 hũ / thùng", "cashew-chilli"],
+    ["cashew-rustic", "Rustic Grilled Cashew", "Hạt Điều Nướng Mộc", "260 g / hũ", "24 hũ / thùng", "cashew-rustic"],
+    ["cashew-skin-250", "Roasted Cashew With Skin", "Hạt Điều Rang Vỏ Lụa", "250 g / hũ", "24 hũ / thùng", "cashew-skin-250"],
+    ["cashew-tray-320", "Roasted Cashew With Skin — Gift Tray", "Hạt Điều Rang Vỏ Lụa — Khay Tròn", "320 g / khay", "24 khay tròn / thùng", "cashew-tray-320"],
+    ["peanut-chilli", "Chilli & Garlic Coated Peanuts", "Đậu Phộng Tỏi Ớt", "250 g / hũ", "24 hũ / thùng", "peanut-chilli"],
+    ["peanut-honey", "Honey & Ginger Coated Peanuts", "Đậu Phộng Gừng Mật Ong", "250 g / hũ", "24 hũ / thùng", "peanut-honey"],
+  ] as const).map(([id, name, nameVi, pack, cartonSpec, image]) =>
+    make({
+      id,
+      name: `Grainoo ${name}`,
+      nameVi,
+      brand: "Grainoo",
+      category: "dried",
+      pack,
+      origin: "Bình Phước, Việt Nam",
+      cartonSpec,
+      unitsPerCarton: 24,
+      cartonDims: "Hũ nhựa PET",
+      shelfLife: "12 tháng / 12 months",
+      image,
+    }),
+  ),
+
+  // ── Noodles & crackers ─────────────────────────────────────────────────
+  make({
+    id: "indomie-5",
+    name: "Indomie Mi Goreng Special 5 Pack",
+    nameVi: "Mì Xào Indomie Mi Goreng 5 Gói",
+    brand: "Indomie",
+    category: "noodles",
+    pack: "85 g × 5",
+    origin: "Indonesia",
+    cartonSpec: "40 lốc / thùng",
+    unitsPerCarton: 40,
+    cartonDims: "Lốc 5 gói × 85 g",
+    shelfLife: "12 tháng / 12 months",
+    image: "indomie-5",
+  }),
+  make({
+    id: "indomie-10",
+    name: "Indomie Mi Goreng Special 10 Pack",
+    nameVi: "Mì Xào Indomie Mi Goreng 10 Gói",
+    brand: "Indomie",
+    category: "noodles",
+    pack: "85 g × 10",
+    origin: "Indonesia",
+    cartonSpec: "60 lốc / thùng",
+    unitsPerCarton: 60,
+    cartonDims: "Lốc 10 gói × 85 g",
+    shelfLife: "12 tháng / 12 months",
+    image: "indomie-10",
+  }),
+  make({
+    id: "cracker-blacksesame",
+    name: "Lương Sơn Black Sesame Rice Cracker",
+    nameVi: "Bánh Đa Vừng Đen Lương Sơn",
+    brand: "Bánh Đa Lương Sơn",
+    category: "noodles",
+    pack: "140 g / gói (5 chiếc)",
+    origin: "Lương Sơn, Việt Nam",
+    cartonSpec: "48 gói / thùng",
+    unitsPerCarton: 48,
+    cartonDims: "Gói 5 chiếc × 140 g",
+    shelfLife: "6 tháng / 6 months",
+    image: "cracker-blacksesame",
+  }),
 ];
 
 export const productCount = products.length;

@@ -27,8 +27,10 @@ export function ProductCatalog({ initialCategory }: { initialCategory?: string |
         (!q ||
           p.name.toLowerCase().includes(q) ||
           p.nameVi.toLowerCase().includes(q) ||
+          p.brand.toLowerCase().includes(q) ||
           p.sku.toLowerCase().includes(q)),
     );
+
   }, [query, cat]);
 
   return (
@@ -96,20 +98,30 @@ export function ProductCatalog({ initialCategory }: { initialCategory?: string |
               key={p.id}
               className="flex flex-col rounded-2xl border border-border bg-card p-5 transition-shadow hover:shadow-md"
             >
-              <div className="grid h-28 place-items-center rounded-xl bg-primary/5 text-primary/40">
-                <Package className="size-8" aria-hidden />
+              <div className="overflow-hidden rounded-xl bg-white">
+                <img
+                  src={p.image}
+                  alt={`${p.nameVi} — ${p.name}`}
+                  loading="lazy"
+                  width={900}
+                  height={900}
+                  className="aspect-square w-full object-contain transition-transform duration-300 hover:scale-105"
+                />
               </div>
               <span className="mt-4 text-[11px] font-semibold uppercase tracking-[0.14em] text-gold-foreground">
                 {t(
                   categories.find((c) => c.id === p.category)!.en,
                   categories.find((c) => c.id === p.category)!.vi,
                 )}
+                {" · "}
+                {p.brand}
               </span>
               <h2 className="mt-2 font-serif text-lg font-semibold leading-snug">{p.nameVi}</h2>
               <p className="text-sm text-muted-foreground">{p.name}</p>
               <p className="mt-2 text-sm font-medium">
                 {p.pack} · {p.sku}
               </p>
+              <p className="text-xs text-muted-foreground">{p.cartonSpec}</p>
               <p className="mt-1 text-xs text-sage">{p.origin}</p>
               <div className="mt-4 flex flex-wrap gap-2 pt-1">
                 <Link
@@ -131,6 +143,7 @@ export function ProductCatalog({ initialCategory }: { initialCategory?: string |
           ))}
         </div>
 
+
         {filtered.length === 0 && (
           <p className="mt-10 text-center text-muted-foreground">
             {t("No products match your search.", "Không tìm thấy sản phẩm phù hợp.")}
@@ -147,24 +160,30 @@ export function ProductCatalog({ initialCategory }: { initialCategory?: string |
                   {locale === "vi" ? selected.nameVi : selected.name}
                 </DialogTitle>
                 <DialogDescription>
-                  {selected.sku} · {selected.origin}
+                  {selected.brand} · {selected.sku} · {selected.origin}
                 </DialogDescription>
               </DialogHeader>
+              <img
+                src={selected.image}
+                alt={`${selected.nameVi} — ${selected.name}`}
+                className="aspect-square w-full max-w-[220px] self-center rounded-xl bg-white object-contain"
+              />
               <dl className="grid grid-cols-2 gap-4 text-sm">
                 <div>
-                  <dt className="text-muted-foreground">{t("Pack format", "Quy cách")}</dt>
+                  <dt className="text-muted-foreground">{t("Net weight / volume", "Khối lượng tịnh")}</dt>
                   <dd className="font-medium">{selected.pack}</dd>
                 </div>
                 <div>
-                  <dt className="text-muted-foreground">{t("Units / carton", "Đơn vị / thùng")}</dt>
-                  <dd className="font-medium">{selected.unitsPerCarton}</dd>
+                  <dt className="text-muted-foreground">{t("Carton spec", "Quy cách thùng")}</dt>
+                  <dd className="font-medium">{selected.cartonSpec}</dd>
                 </div>
                 <div>
                   <dt className="text-muted-foreground">
-                    {t("Carton dimensions", "Kích thước thùng")}
+                    {t("Packaging detail", "Chi tiết đóng gói")}
                   </dt>
                   <dd className="font-medium">{selected.cartonDims}</dd>
                 </div>
+
                 <div>
                   <dt className="text-muted-foreground">{t("Shelf life", "Hạn sử dụng")}</dt>
                   <dd className="font-medium">{selected.shelfLife}</dd>
